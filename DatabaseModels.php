@@ -15,30 +15,29 @@ require __DIR__.'/vendor/autoload.php';
 
 class Controller{
     
-    protected $model;
+    public $model;
     
     public function __construct(){
-        $this->model = \Model::factory(str_replace("Controller", "", get_class($this)));
+        $this->model = \Model::factory(str_replace('Controller', 'Model', get_class($this)));
     }
 
     public function find_one($id=null, $resolved=false){
-        $m = $this->model->find_one($id);
-        if($resolved)
-            return $m->as_array();
-        return $m;
+        if(false === $resolved)
+            return $this->model->find_one($id);
+        return $this->model->find_one($id)->as_array();
     }
 
-    public function find_many($resolved=false){
-        if($resolved)
-            return $this->model->find_array();
-        return $this->model->find_result_set();
+    public function find_many($resolved){
+        if(false === $resolved)
+            return $this->model->find_many();
+        return $this->model->find_array();
     }
     
     public static function factory($className){
         $name = $className.'Controller';
         if(class_exists($name))
             return new $name;
-        throw new Exception("class: ".$className." not exists");
+        throw new Exception('class: '.$className.' not exists');
     }
 
 }
@@ -53,6 +52,8 @@ class StructureModel extends \Model{
 
     const TYPE_BEACH = 0;
     const TYPE_POOL = 1;
+
+    public static $_table = 'structure';
 
     public static function type($orm, $type){
         if('beaches' === $type)

@@ -24,15 +24,14 @@ $app->group("/structure",
     function(){
         $this->get("",
             function(RequestInterface $request, ResponseInterface $response){
-                $controller = Controller::factory('Structure');
-                $response->getBody()->write(json_encode($controller->find_one()));
+                $response->getBody()->write(json_encode(Controller::factory('Structure')->find_many(true)));
             });
 
         $this->group("/beaches",
             function(){
                 $this->get("",
-                    function($request, $response){
-                        $model = \Model::factory('Structure');
+                    function(RequestInterface $request, ResponseInterface $response){
+                        $model = \Model::factory('StructureModel');
                         $response->getBody()->write(json_encode($model->filter('type','beaches')->find_array()));
                     });
             });
@@ -40,7 +39,7 @@ $app->group("/structure",
         $this->group("/pools",
             function(){
                 $this->get("",
-                    function($request, $response){
+                    function(RequestInterface $request, ResponseInterface $response){
                         $model = \Model::factory('Structure');
                         $response->getBody()->write(json_encode($model->filter('type','pools')->find_array()));
                     });
