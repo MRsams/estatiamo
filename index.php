@@ -24,8 +24,8 @@ $app->group("/structure",
     function(){
         $this->get("",
             function(RequestInterface $request, ResponseInterface $response){
-                $model = \Model::factory('Structure');
-                $response->getBody()->write(json_encode($model->find_array()));
+                $controller = Controller::factory('Structure');
+                $response->getBody()->write(json_encode($controller->find_one()));
             });
 
         $this->group("/beaches",
